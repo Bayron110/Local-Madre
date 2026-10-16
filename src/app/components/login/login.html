@@ -1,0 +1,82 @@
+<div class="login-page">
+    <!-- Capas de fondo -->
+    <div class="fondo-zoom" aria-hidden="true"></div>
+    <div class="velo" aria-hidden="true"></div>
+    <div class="flotantes" aria-hidden="true">
+        <span>🥩</span><span>🍗</span><span>🌭</span><span>🥓</span><span>🍖</span><span>🥩</span>
+    </div>
+
+    <main class="escena">
+        <!-- Lado de marca (solo escritorio) -->
+        <section class="marca">
+            <span class="etiqueta-marca">🥩 Portal de clientes</span>
+            <h2>Tu factura,<br /><em>sin hacer fila</em></h2>
+            <p class="marca-texto">Solicítala desde tu celular y revisa su estado cuando quieras.</p>
+
+            <div class="pizarra">
+                <h3>Cómo funciona</h3>
+                <ol>
+                    <li><span class="paso">1</span> Crea tu cuenta</li>
+                    <li><span class="paso">2</span> Ingresa el valor o detalla tus productos</li>
+                    <li><span class="paso">3</span> Revisa el estado en "Mis solicitudes"</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Tarjeta de login -->
+        <form class="login-card" [formGroup]="form" (ngSubmit)="iniciarSesion()" novalidate>
+            <div class="login-header">
+                <span class="logo" aria-hidden="true">🥩🍗</span>
+                <h1>Iniciar sesión</h1>
+                <p>Bienvenido de nuevo, ingresa a tu cuenta</p>
+            </div>
+
+            <div class="campo">
+                <div class="flotante">
+                    <span class="icono" aria-hidden="true">✉️</span>
+                    <input id="correo" type="email" formControlName="correo" placeholder=" "
+                        autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" />
+                    <label for="correo">Correo electrónico</label>
+                </div>
+                @if (campoInvalido('correo')) {
+                <small class="error" role="alert">Ingresa un correo electrónico válido.</small>
+                }
+            </div>
+
+            <div class="campo">
+                <div class="flotante">
+                    <span class="icono" aria-hidden="true">🔒</span>
+                    <input id="password" [type]="mostrarPassword ? 'text' : 'password'"
+                        formControlName="password" placeholder=" " autocomplete="current-password" />
+                    <label for="password">Contraseña</label>
+                    <button type="button" class="ver" (click)="mostrarPassword = !mostrarPassword"
+                        [attr.aria-pressed]="mostrarPassword"
+                        [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                        {{ mostrarPassword ? 'Ocultar' : 'Ver' }}
+                    </button>
+                </div>
+                @if (campoInvalido('password')) {
+                <small class="error" role="alert">La contraseña debe tener al menos 8 caracteres.</small>
+                }
+            </div>
+
+            @if (mensajeError()) {
+            <div class="alerta alerta-error" role="alert">{{ mensajeError() }}</div>
+            }
+
+            <button type="submit" class="btn-ingresar" [disabled]="cargando()">
+                @if (cargando()) {
+                <span class="spinner" aria-hidden="true"></span>
+                Ingresando...
+                } @else {
+                Ingresar
+                }
+            </button>
+
+            <p class="pie">
+                ¿No tienes cuenta?
+                <a routerLink="/registro">Regístrate aquí</a>
+            </p>
+        </form>
+    </main>
+</div>

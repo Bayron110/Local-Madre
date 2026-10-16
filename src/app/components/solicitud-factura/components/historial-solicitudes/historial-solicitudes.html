@@ -1,0 +1,102 @@
+<div class="fondo">
+    <header class="topbar">
+        <div class="topbar-titulo">
+            <span class="topbar-icono" aria-hidden="true">🥩</span>
+            <h1>Mis solicitudes</h1>
+        </div>
+
+        <nav class="acciones">
+            <a routerLink="/solicitud-factura" class="btn-nueva-top">+ Nueva solicitud</a>
+            <button type="button" class="btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
+
+    <main class="contenido">
+        <div class="centro">
+            @if (cargando()) {
+            <p class="info">Cargando tus solicitudes...</p>
+            } @else if (error()) {
+            <div class="alerta-error">{{ error() }}</div>
+            } @else if (solicitudes().length === 0) {
+            <section class="vacio">
+                <span class="vacio-icono" aria-hidden="true">🧾</span>
+                <p>Aún no tienes solicitudes de factura.</p>
+                <a routerLink="/solicitud-factura" class="btn-nueva">Crear mi primera solicitud</a>
+            </section>
+            } @else {
+            <section class="resumen">
+                <span class="chip-resumen">👤 Cliente <strong>{{ cedula() }}</strong></span>
+                <span class="chip-resumen">
+                    🧾 <strong>{{ solicitudes().length }}</strong>
+                    {{ solicitudes().length === 1 ? 'solicitud' : 'solicitudes' }}
+                </span>
+            </section>
+
+            <div class="lista">
+                @for (s of solicitudes(); track s.id) {
+                <article class="ticket">
+                    <header class="ticket-cab">
+                        <span class="ticket-marca">Solicitud de factura</span>
+                        <span class="estado" [class]="'estado ' + claseEstado(s.estado)">{{ s.estado }}</span>
+                    </header>
+
+                    <div class="ticket-id">
+                        <span class="etiqueta">N° de solicitud</span>
+                        <span class="id">{{ s.id }}</span>
+                        @if (s.fecha) {
+                        <span class="fecha">🕒 {{ s.fecha | date: 'dd/MM/yyyy · HH:mm' }}</span>
+                        }
+                    </div>
+
+                    <div class="ticket-tipo">
+                        <span class="chip-tipo">
+                            {{ s.tipo === 'productos' ? '📖' : '🧾' }} {{ etiquetaTipo(s.tipo) }}
+                        </span>
+                    </div>
+
+                    <!-- Detalle recogible: cerrado por defecto -->
+                    @if (s.tipo === 'productos' && s.productos.length > 0) {
+                    <details class="detalle">
+                        <summary class="detalle-resumen">
+                            <span class="detalle-texto">
+                                <span class="txt-abrir">Ver productos</span>
+                                <span class="txt-cerrar">Ocultar productos</span>
+                                <span class="detalle-cuenta">{{ s.productos.length }}</span>
+                            </span>
+                            <span class="detalle-flecha" aria-hidden="true"></span>
+                        </summary>
+
+                        <ul class="items">
+                            @for (p of s.productos; track p.numero) {
+                            <li class="item">
+                                <span class="item-num">{{ p.numero }}</span>
+                                <span class="item-nombre">{{ p.producto }}</span>
+                                <span class="item-puntos"></span>
+                                <span class="item-cant">{{ p.cantidadLibras }} lb</span>
+                            </li>
+                            }
+                        </ul>
+                    </details>
+                    }
+
+                    <button type="button" class="btn-resultado" (click)="abrirResultado(s.id)">
+                        Ver resultado
+                    </button>
+
+                    <footer class="ticket-total">
+                        <span>Total</span>
+                        <strong>$ {{ s.valorTotal | number: '1.2-2' }}</strong>
+                    </footer>
+                </article>
+                }
+            </div>
+            }
+        </div>
+    </main>
+
+    <!-- Modal con el resultado de la solicitud -->
+    @if (seleccionada(); as sel) {
+    <app-respuesta-solicitud [estado]="sel.estado" [correo]="sel.correoEnvio || correo()" [enlace]="sel.enlace"
+        [solicitudId]="sel.id" (cerrar)="cerrarResultado()" />
+    }
+</div>

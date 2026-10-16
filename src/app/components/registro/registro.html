@@ -1,0 +1,138 @@
+<div class="registro-page">
+    <!-- Capas de fondo -->
+    <div class="fondo-zoom" aria-hidden="true"></div>
+    <div class="velo" aria-hidden="true"></div>
+    <div class="flotantes" aria-hidden="true">
+        <span>🥩</span><span>🍗</span><span>🌭</span><span>🥓</span><span>🍖</span><span>🥩</span>
+    </div>
+
+    <main class="escena">
+        <!-- Lado de marca (solo escritorio) -->
+        <section class="marca">
+            <span class="etiqueta-marca">🥩 Portal de clientes</span>
+            <h2>Únete y pide<br /><em>sin hacer fila</em></h2>
+            <p class="marca-texto">Carnes y pollos frescos, directo a tu mesa. Crea tu cuenta en un minuto.</p>
+
+            <div class="pizarra">
+                <h3>Al registrarte podrás</h3>
+                <ul>
+                    <li><span class="visto">✔</span> Solicitar tu factura desde el celular</li>
+                    <li><span class="visto">✔</span> Revisar el estado de tus solicitudes</li>
+                    <li><span class="visto">✔</span> Tener tus datos listos en cada pedido</li>
+                </ul>
+                <p class="nota">★ Tu cédula es tu código de cliente</p>
+            </div>
+        </section>
+
+        <!-- Tarjeta de registro -->
+        <form class="registro-card" [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+            <a routerLink="/login" class="btn-volver">← Volver al login</a>
+
+            <div class="registro-header">
+                <span class="logo" aria-hidden="true">🥩🍗</span>
+                <h1>Crear cuenta</h1>
+                <p>Carnes y pollos frescos, directo a tu mesa</p>
+            </div>
+
+            <div class="campo">
+                <div class="flotante">
+                    <span class="icono" aria-hidden="true">🪪</span>
+                    <input id="cedula" type="text" formControlName="cedula" maxlength="10" inputmode="numeric"
+                        placeholder="1700000000" autocomplete="off" />
+                    <label for="cedula">Número de cédula</label>
+                </div>
+                @if (campoInvalido('cedula')) {
+                <small class="error" role="alert">Ingresa una cédula ecuatoriana válida (10 dígitos).</small>
+                }
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <div class="flotante">
+                        <span class="icono" aria-hidden="true">👤</span>
+                        <input id="nombres" type="text" formControlName="nombres" placeholder="Juan Carlos"
+                            autocomplete="given-name" />
+                        <label for="nombres">Nombres completos</label>
+                    </div>
+                    @if (campoInvalido('nombres')) {
+                    <small class="error" role="alert">Ingresa tus nombres completos.</small>
+                    }
+                </div>
+
+                <div class="campo">
+                    <div class="flotante">
+                        <span class="icono" aria-hidden="true">👥</span>
+                        <input id="apellidos" type="text" formControlName="apellidos" placeholder="Pérez Gómez"
+                            autocomplete="family-name" />
+                        <label for="apellidos">Apellidos completos</label>
+                    </div>
+                    @if (campoInvalido('apellidos')) {
+                    <small class="error" role="alert">Ingresa tus apellidos completos.</small>
+                    }
+                </div>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <div class="flotante">
+                        <span class="icono" aria-hidden="true">📞</span>
+                        <input id="telefono" type="tel" formControlName="telefono" maxlength="10"
+                            placeholder="0991234567" autocomplete="tel" inputmode="tel" />
+                        <label for="telefono">Teléfono</label>
+                    </div>
+                    @if (campoInvalido('telefono')) {
+                    <small class="error" role="alert">Ingresa un teléfono válido (ej. 0991234567).</small>
+                    }
+                </div>
+
+                <div class="campo">
+                    <div class="flotante">
+                        <span class="icono" aria-hidden="true">✉️</span>
+                        <input id="correo" type="email" formControlName="correo" placeholder="correo@ejemplo.com"
+                            autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" />
+                        <label for="correo">Correo electrónico</label>
+                    </div>
+                    @if (campoInvalido('correo')) {
+                    <small class="error" role="alert">Ingresa un correo electrónico válido.</small>
+                    }
+                </div>
+            </div>
+
+            <div class="campo">
+                <div class="flotante">
+                    <span class="icono" aria-hidden="true">📍</span>
+                    <input id="direccion" type="text" formControlName="direccion"
+                        placeholder="Calle principal, número, sector" autocomplete="street-address" />
+                    <label for="direccion">Dirección de domicilio</label>
+                </div>
+                @if (campoInvalido('direccion')) {
+                <small class="error" role="alert">Ingresa tu dirección completa.</small>
+                }
+            </div>
+
+            <div class="campo">
+                <div class="flotante">
+                    <span class="icono" aria-hidden="true">🔒</span>
+                    <input id="password" [type]="mostrarPassword ? 'text' : 'password'" formControlName="password"
+                        placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+                    <label for="password">Contraseña</label>
+                    <button type="button" class="ver" (click)="mostrarPassword = !mostrarPassword"
+                        [attr.aria-pressed]="mostrarPassword"
+                        [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                        {{ mostrarPassword ? 'Ocultar' : 'Ver' }}
+                    </button>
+                </div>
+                @if (campoInvalido('password')) {
+                <small class="error" role="alert">La contraseña debe tener al menos 8 caracteres.</small>
+                }
+            </div>
+
+            <button type="submit" class="btn-registrar">Registrar</button>
+
+            <p class="pie">
+                ¿Ya tienes cuenta?
+                <a routerLink="/login">Inicia sesión</a>
+            </p>
+        </form>
+    </main>
+</div>

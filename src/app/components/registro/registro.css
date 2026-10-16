@@ -1,0 +1,596 @@
+@property --angulo {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+:host {
+    --rojo: #9b1c1c;
+    --rojo-oscuro: #7a1212;
+    --dorado: #e9a23b;
+    --marron: #3e2723;
+    --crema: #fff6e9;
+    --error-claro: #ff9b9b;
+
+    display: block;
+    height: 100vh;
+    height: 100dvh;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--crema);
+}
+
+/* ========== Contenedor fijo: nunca se mueve ========== */
+.registro-page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    isolation: isolate;
+    box-sizing: border-box;
+    padding: 24px 20px;
+    padding-top: calc(24px + env(safe-area-inset-top));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: none;
+    background: #1e120f;
+}
+
+/* ========== Capas de fondo ========== */
+.fondo-zoom {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+        url('https://i.postimg.cc/Qdh9bhkG/Gemini-Generated-Image-3vszh63vszh63vsz.jpg') center 45% / cover no-repeat,
+        linear-gradient(135deg, #8a5a3c 0%, #3e2723 100%);
+    animation: zoom-lento 26s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes zoom-lento {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.1) translate(-1%, -1%);
+    }
+}
+
+/* Velo: más oscuro a la izquierda para que se lea el texto */
+.velo {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        linear-gradient(90deg, rgba(20, 12, 10, 0.82) 0%, rgba(20, 12, 10, 0.5) 55%, rgba(20, 12, 10, 0.72) 100%);
+}
+
+/* Emojis que suben flotando, muy sutiles */
+.flotantes {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.flotantes span {
+    position: absolute;
+    bottom: -60px;
+    left: var(--x, 10%);
+    font-size: var(--t, 2rem);
+    opacity: 0;
+    filter: blur(0.4px);
+    animation: subir var(--v, 20s) linear infinite;
+    animation-delay: var(--d, 0s);
+}
+
+.flotantes span:nth-child(1) { --x: 6%;  --t: 2.4rem; --v: 22s; --d: 0s; }
+.flotantes span:nth-child(2) { --x: 24%; --t: 1.7rem; --v: 18s; --d: 4s; }
+.flotantes span:nth-child(3) { --x: 46%; --t: 2.1rem; --v: 25s; --d: 9s; }
+.flotantes span:nth-child(4) { --x: 63%; --t: 1.6rem; --v: 20s; --d: 2s; }
+.flotantes span:nth-child(5) { --x: 80%; --t: 2.3rem; --v: 24s; --d: 7s; }
+.flotantes span:nth-child(6) { --x: 93%; --t: 1.8rem; --v: 19s; --d: 12s; }
+
+@keyframes subir {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+
+    10% {
+        opacity: 0.32;
+    }
+
+    85% {
+        opacity: 0.32;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-115vh) rotate(40deg);
+    }
+}
+
+/* ========== Escena ========== */
+.escena {
+    /* margin:auto centra sin recortar cuando la pantalla es baja (scroll) */
+    margin: auto;
+    width: 100%;
+    max-width: 1140px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 580px);
+    align-items: center;
+    gap: 56px;
+}
+
+/* ========== Lado de marca ========== */
+.marca {
+    animation: entrar 0.6s ease-out both;
+}
+
+.etiqueta-marca {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid rgba(233, 162, 59, 0.6);
+    border-radius: 999px;
+    background: rgba(233, 162, 59, 0.12);
+    color: var(--dorado);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.marca h2 {
+    margin: 18px 0 12px;
+    font-size: clamp(2.1rem, 3.8vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.marca h2 em {
+    font-style: normal;
+    background: linear-gradient(90deg, #f6c46a, var(--dorado));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.marca-texto {
+    max-width: 400px;
+    margin: 0 0 26px;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+/* Pizarra de carnicería */
+.pizarra {
+    max-width: 380px;
+    padding: 18px 22px 16px;
+    border: 7px solid #7a5436;
+    border-radius: 10px;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.07), transparent 60%),
+        #26302b;
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.5),
+        inset 0 0 22px rgba(0, 0, 0, 0.55);
+    font-family: 'Segoe Print', 'Bradley Hand', 'Chalkboard SE', 'Comic Sans MS', cursive;
+    transform: rotate(-1.2deg);
+}
+
+.pizarra h3 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 400;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: rgba(233, 162, 59, 0.8);
+    text-underline-offset: 5px;
+}
+
+.pizarra ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.pizarra li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.93rem;
+    line-height: 1.3;
+}
+
+.visto {
+    flex: 0 0 auto;
+    color: var(--dorado);
+    font-weight: 700;
+}
+
+.nota {
+    margin: 12px 0 0;
+    color: #f6c46a;
+    font-size: 0.9rem;
+}
+
+/* ========== Tarjeta de vidrio oscuro ========== */
+.registro-card {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 26px 30px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 24px;
+    background: rgba(28, 17, 14, 0.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    backdrop-filter: blur(18px) saturate(1.2);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+    animation: entrar 0.6s 0.12s ease-out both;
+}
+
+/* Borde dorado que gira alrededor de la tarjeta */
+.registro-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    padding: 2px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--angulo), transparent 0 62%, var(--dorado) 82%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+    animation: girar-borde 7s linear infinite;
+}
+
+@keyframes girar-borde {
+    to {
+        --angulo: 360deg;
+    }
+}
+
+@keyframes entrar {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ========== Botón volver ========== */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--crema);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.btn-volver:hover {
+    border-color: var(--dorado);
+    background: rgba(233, 162, 59, 0.18);
+    transform: translateX(-3px);
+}
+
+.btn-volver:focus-visible,
+.ver:focus-visible,
+.pie a:focus-visible,
+.btn-registrar:focus-visible {
+    outline: 3px solid rgba(233, 162, 59, 0.8);
+    outline-offset: 2px;
+}
+
+/* ========== Encabezado de la tarjeta ========== */
+.registro-header {
+    margin: 10px 0 22px;
+    text-align: center;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    min-width: 80px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    border: 3px solid var(--dorado);
+    border-radius: 999px;
+    background: rgba(255, 246, 233, 0.95);
+    font-size: 1.7rem;
+    line-height: 1;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.registro-header h1 {
+    margin: 12px 0 4px;
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.registro-header p {
+    margin: 0;
+    font-size: 0.93rem;
+    opacity: 0.72;
+}
+
+/* ========== Campos con etiqueta flotante ========== */
+.fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 14px;
+}
+
+.campo {
+    min-width: 0;
+    margin-bottom: 14px;
+}
+
+.flotante {
+    position: relative;
+}
+
+.icono {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.flotante input {
+    width: 100%;
+    height: 56px;
+    box-sizing: border-box;
+    padding: 22px 14px 6px 44px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--crema);
+    caret-color: var(--dorado);
+    /* 16px evita el zoom automático en iPhone */
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+#password {
+    padding-right: 84px;
+}
+
+/* El ejemplo (placeholder) solo aparece al enfocar */
+.flotante input::placeholder {
+    color: transparent;
+    transition: color 0.2s;
+}
+
+.flotante input:focus::placeholder {
+    color: rgba(255, 246, 233, 0.4);
+}
+
+.flotante label {
+    position: absolute;
+    left: 44px;
+    top: 50%;
+    max-width: calc(100% - 60px);
+    margin: 0;
+    overflow: hidden;
+    transform: translateY(-50%);
+    color: rgba(255, 246, 233, 0.62);
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: top 0.18s, font-size 0.18s, color 0.18s, transform 0.18s;
+}
+
+/* La etiqueta sube al enfocar, al escribir o al autocompletar */
+.flotante input:focus ~ label,
+.flotante input:not(:placeholder-shown) ~ label,
+.flotante input:-webkit-autofill ~ label {
+    top: 9px;
+    transform: none;
+    color: var(--dorado);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.flotante input:focus {
+    border-color: var(--dorado);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(233, 162, 59, 0.22);
+}
+
+.flotante input.ng-invalid.ng-touched {
+    border-color: var(--error-claro);
+}
+
+/* Autocompletado del navegador sobre fondo oscuro */
+.flotante input:-webkit-autofill,
+.flotante input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--crema);
+    caret-color: var(--dorado);
+    box-shadow: 0 0 0 60px #2b1e19 inset;
+    transition: background-color 9999s;
+}
+
+.error {
+    display: block;
+    margin-top: 6px;
+    padding-left: 4px;
+    color: var(--error-claro);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Botón Ver / Ocultar */
+.ver {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 7px 11px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--dorado);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ver:hover {
+    background: rgba(233, 162, 59, 0.15);
+}
+
+/* ========== Botón principal con brillo ========== */
+.btn-registrar {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #b32222 0%, var(--rojo) 55%, var(--rojo-oscuro) 100%);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(155, 28, 28, 0.5);
+    transition: transform 0.12s, box-shadow 0.2s, filter 0.2s;
+}
+
+/* Destello que cruza el botón al pasar el mouse */
+.btn-registrar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+}
+
+.btn-registrar:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 14px 30px rgba(155, 28, 28, 0.6);
+}
+
+.btn-registrar:hover::after {
+    left: 130%;
+    transition: left 0.7s ease;
+}
+
+.btn-registrar:active {
+    transform: scale(0.98);
+}
+
+/* ========== Pie ========== */
+.pie {
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    text-align: center;
+    font-size: 0.92rem;
+    opacity: 0.92;
+}
+
+.pie a {
+    color: var(--dorado);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.pie a:hover {
+    text-decoration: underline;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 960px) {
+    .escena {
+        grid-template-columns: minmax(0, 580px);
+        justify-content: center;
+    }
+
+    /* En móvil y tablet solo la tarjeta */
+    .marca {
+        display: none;
+    }
+
+    .velo {
+        background: radial-gradient(ellipse at center, rgba(20, 12, 10, 0.42) 0%, rgba(20, 12, 10, 0.8) 100%);
+    }
+}
+
+@media (max-width: 560px) {
+    .registro-page {
+        padding: 14px 12px;
+        padding-top: calc(14px + env(safe-area-inset-top));
+        padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+
+    .registro-card {
+        padding: 22px 18px 20px;
+        border-radius: 20px;
+    }
+
+    .fila {
+        grid-template-columns: 1fr;
+    }
+
+    .registro-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Respeta a quien desactiva las animaciones */
+@media (prefers-reduced-motion: reduce) {
+    .fondo-zoom,
+    .flotantes span,
+    .registro-card::before,
+    .marca,
+    .registro-card {
+        animation: none;
+    }
+
+    .flotantes {
+        display: none;
+    }
+
+    .registro-card::before {
+        background: linear-gradient(135deg, rgba(233, 162, 59, 0.7), transparent 60%);
+    }
+}

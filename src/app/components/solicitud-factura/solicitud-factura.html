@@ -1,0 +1,155 @@
+<div class="fondo">
+    <nav class="acciones">
+        <a routerLink="/historial" class="enlace">📋 Mis solicitudes</a>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+    </nav>
+
+    <div class="panel">
+        <header class="barra">
+            <span class="icono-barra" aria-hidden="true">🥩</span>
+            <h1 class="titulo">Solicitud de factura</h1>
+            <span class="icono-barra" aria-hidden="true">🍗</span>
+        </header>
+
+        <main class="contenido">
+            <!-- DATOS DEL CLIENTE -->
+            <section class="tarjeta">
+                <h2>Tus datos</h2>
+
+                @if (cargandoCliente()) {
+                <p class="info">Cargando tus datos...</p>
+                } @else if (errorCliente()) {
+                <div class="alerta alerta-error">{{ errorCliente() }}</div>
+                } @else if (cliente(); as c) {
+                <dl class="datos">
+                    <div>
+                        <dt>Nombre completo</dt>
+                        <dd>{{ c.nombres }} {{ c.apellidos }}</dd>
+                    </div>
+                    <div>
+                        <dt>Cédula / Código de cliente</dt>
+                        <dd>{{ c.cedula }}</dd>
+                    </div>
+                    <div>
+                        <dt>Teléfono</dt>
+                        <dd>{{ c.telefono }}</dd>
+                    </div>
+                    <div>
+                        <dt>Correo electrónico</dt>
+                        <dd>{{ c.correo }}</dd>
+                    </div>
+                    <div class="ancho">
+                        <dt>Dirección</dt>
+                        <dd>{{ c.direccion }}</dd>
+                    </div>
+                </dl>
+                }
+            </section>
+
+            <!-- SOLICITUD -->
+            <form class="solicitud" [formGroup]="form" (ngSubmit)="solicitarFactura()" novalidate>
+                <h2>¿Cómo quieres tu factura?</h2>
+
+                <div class="opciones">
+                    <label class="opcion" [class.activa]="tipo() === 'valor'">
+                        <input type="radio" name="tipo" [checked]="tipo() === 'valor'"
+                            (change)="seleccionarTipo('valor')" />
+                        <span class="marca" aria-hidden="true"></span>
+                        <span class="opcion-icono" aria-hidden="true">🧾</span>
+                        <span class="opcion-texto">1. Ingresar el valor de la factura</span>
+                    </label>
+
+                    <label class="opcion" [class.activa]="tipo() === 'productos'">
+                        <input type="radio" name="tipo" [checked]="tipo() === 'productos'"
+                            (change)="seleccionarTipo('productos')" />
+                        <span class="marca" aria-hidden="true"></span>
+                        <span class="opcion-icono" aria-hidden="true">📖</span>
+                        <span class="opcion-texto">2. Detallar los productos de la factura</span>
+                    </label>
+                </div>
+
+                @if (tipo() === 'productos') {
+                <div class="productos" formArrayName="productos">
+                    <div class="fila-cabecera">
+                        <span>N°</span>
+                        <span></span>
+                        <span class="cab-producto">Tus productos ({{ productos.length }})</span>
+                        <span>Cantidad</span>
+                        <span></span>
+                    </div>
+
+                    @for (fila of productos.controls; track $index; let i = $index) {
+                    <div class="fila-producto" [formGroupName]="i">
+                        <span class="numero">{{ i + 1 }}</span>
+
+                        <!-- Miniatura: cambia según lo que escribes en "Producto" -->
+                        @if (miniatura(fila.value.producto); as m) {
+                        <span class="miniatura" aria-hidden="true">
+                            @if (m.imagen) {
+                            <img [src]="m.imagen" alt="" loading="lazy" />
+                            } @else {
+                            {{ m.emoji }}
+                            }
+                        </span>
+                        }
+
+                        <div class="campo campo-producto">
+                            <input type="text" formControlName="producto" placeholder="Ej. Pechuga de pollo"
+                                aria-label="Producto" />
+                            @if (filaInvalida(i, 'producto')) {
+                            <small class="error">Ingresa el producto.</small>
+                            }
+                        </div>
+
+                        <div class="campo campo-cantidad">
+                            <div class="cantidad">
+                                <input type="number" formControlName="cantidad" min="0.01" step="0.01"
+                                    placeholder="0.00" aria-label="Cantidad en libras" />
+                                <span class="unidad">(lb)</span>
+                            </div>
+                            @if (filaInvalida(i, 'cantidad')) {
+                            <small class="error">Mayor a 0.</small>
+                            }
+                        </div>
+
+                        <button type="button" class="btn-quitar" (click)="quitarProducto(i)"
+                            [disabled]="productos.length === 1" aria-label="Quitar producto">
+                            ✕
+                        </button>
+                    </div>
+                    }
+
+                    <button type="button" class="btn-agregar" (click)="agregarProducto()">
+                        + Agregar otro producto
+                    </button>
+                </div>
+                }
+
+                <div class="campo total">
+                    <label for="valorTotal">
+                        {{ tipo() === 'productos' ? 'Valor total de la factura ($)' : 'Valor de la factura ($)' }}
+                    </label>
+                    <input id="valorTotal" type="number" formControlName="valorTotal" min="0.01" step="0.01"
+                        placeholder="0.00" />
+                    @if (totalInvalido()) {
+                    <small class="error">Ingresa un valor mayor a 0.</small>
+                    }
+                </div>
+
+                @if (mensajeError()) {
+                <div class="alerta alerta-error">{{ mensajeError() }}</div>
+                }
+                @if (mensajeExito()) {
+                <div class="alerta alerta-exito">
+                    {{ mensajeExito() }}
+                    <a routerLink="/historial" class="enlace-exito">Ver mis solicitudes</a>
+                </div>
+                }
+
+                <button type="submit" class="btn-solicitar" [disabled]="enviando() || !cliente()">
+                    {{ enviando() ? 'Enviando...' : 'Solicitar factura' }}
+                </button>
+            </form>
+        </main>
+    </div>
+</div>

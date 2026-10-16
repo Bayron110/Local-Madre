@@ -1,0 +1,412 @@
+:host {
+    --rojo: #9b1c1c;
+    --rojo-oscuro: #7a1212;
+    --dorado: #e9a23b;
+    --marron: #3e2723;
+    --crema: #fff6e9;
+    --papel: #fffdf8;
+    --borde: #e6d3bd;
+    --verde: #2e7d32;
+
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--marron);
+}
+
+/* ========== Fondo y caja ========== */
+.fondo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(20, 12, 10, 0.68);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    animation: aparecer 0.2s ease-out;
+}
+
+.modal {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    padding: 32px 26px 24px;
+    border-top: 8px solid var(--rojo);
+    border-radius: 18px;
+    background: var(--papel);
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    animation: emerger 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.modal.ok {
+    border-top-color: var(--verde);
+}
+
+.cerrar {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: var(--crema);
+    color: var(--marron);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cerrar:hover {
+    background: #f3dcc0;
+}
+
+.cerrar:focus-visible,
+.btn-entendido:focus-visible,
+.btn-enlace:focus-visible {
+    outline: 3px solid rgba(233, 162, 59, 0.7);
+    outline-offset: 2px;
+}
+
+/* ========== Textos ========== */
+h2 {
+    margin: 4px 0 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--rojo-oscuro);
+}
+
+.ok h2 {
+    color: var(--verde);
+}
+
+.texto {
+    margin: 0;
+    line-height: 1.55;
+    font-size: 0.97rem;
+}
+
+.correo {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--crema);
+    color: var(--rojo-oscuro);
+    word-break: break-all;
+}
+
+.ayuda {
+    margin-top: 18px;
+    padding: 14px;
+    border: 2px dashed var(--borde);
+    border-radius: 12px;
+    background: var(--crema);
+}
+
+.ayuda p {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Si el bloque solo tiene texto (sin botón), quita el margen sobrante */
+.ayuda p:last-child {
+    margin-bottom: 0;
+}
+
+.btn-enlace {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--dorado);
+    color: var(--marron);
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-enlace:hover {
+    background: #f2b556;
+}
+
+.btn-enlace:active {
+    transform: scale(0.97);
+}
+
+.procesando {
+    margin: 14px 0 0;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--rojo);
+}
+
+.procesando span {
+    animation: parpadeo 1.2s infinite;
+}
+
+.procesando span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.procesando span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.nota {
+    margin: 6px 0 0;
+    font-size: 0.78rem;
+    opacity: 0.65;
+}
+
+.referencia {
+    margin: 20px 0 0;
+    padding-top: 12px;
+    border-top: 2px dashed var(--borde);
+    font-family: ui-monospace, 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: #8a6f5c;
+    word-break: break-all;
+}
+
+.btn-entendido {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: var(--rojo);
+    color: #fff;
+    font: inherit;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(155, 28, 28, 0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-entendido:hover {
+    background: var(--rojo-oscuro);
+}
+
+.btn-entendido:active {
+    transform: scale(0.98);
+}
+
+.icono-info {
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+/* ========== Animación: factura atendida ========== */
+.anim-ok {
+    position: relative;
+    width: 120px;
+    margin: 0 auto 4px;
+}
+
+.check {
+    display: block;
+    width: 96px;
+    height: 96px;
+    margin: 0 auto;
+}
+
+.check-circulo {
+    stroke: var(--verde);
+    stroke-width: 3;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 0;
+    animation: trazar-circulo 0.6s ease-out both;
+}
+
+.check-marca {
+    stroke: var(--verde);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 36;
+    stroke-dashoffset: 0;
+    animation: trazar-marca 0.4s 0.55s ease-out both;
+}
+
+.sobre {
+    position: absolute;
+    top: 0;
+    right: -6px;
+    font-size: 1.9rem;
+    animation: volar 0.8s 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+/* ========== Animación: factura en proceso ========== */
+.anim-proceso {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 14px;
+}
+
+.anillo {
+    position: absolute;
+    inset: 0;
+    border: 4px solid rgba(155, 28, 28, 0.12);
+    border-top-color: var(--rojo);
+    border-radius: 50%;
+    animation: girar 1.1s linear infinite;
+}
+
+.anillo-2 {
+    inset: 12px;
+    border-color: rgba(233, 162, 59, 0.2);
+    border-top-color: var(--dorado);
+    animation-duration: 1.8s;
+    animation-direction: reverse;
+}
+
+.orbita {
+    position: absolute;
+    inset: -6px;
+    animation: girar 3.2s linear infinite;
+}
+
+.punto {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background: var(--dorado);
+    box-shadow: 0 0 10px var(--dorado);
+}
+
+/* Mini factura que "se escribe" */
+.hoja {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 46px;
+    height: 58px;
+    margin: -29px 0 0 -23px;
+    padding: 12px 7px 0;
+    border-top: 5px solid var(--rojo);
+    border-radius: 5px 5px 0 0;
+    background: #fff;
+    box-shadow: 0 6px 14px rgba(62, 39, 35, 0.25);
+    animation: flotar 2s ease-in-out infinite;
+}
+
+.linea {
+    display: block;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--borde);
+    transform-origin: left;
+    animation: escribir 2.4s ease-in-out infinite;
+}
+
+.l2 {
+    animation-delay: 0.3s;
+}
+
+.l3 {
+    animation-delay: 0.6s;
+}
+
+.l4 {
+    width: 60%;
+    animation-delay: 0.9s;
+}
+
+/* ========== Keyframes ========== */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes emerger {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.92);
+    }
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes flotar {
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes escribir {
+    0% {
+        transform: scaleX(0);
+    }
+
+    35%,
+    80% {
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform: scaleX(0);
+    }
+}
+
+@keyframes parpadeo {
+
+    0%,
+    80%,
+    100% {
+        opacity: 0.2;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}
+
+@keyframes trazar-circulo {
+    from {
+        stroke-dashoffset: 151;
+    }
+}
+
+@keyframes trazar-marca {
+    from {
+        stroke-dashoffset: 36;
+    }
+}
+
+@keyframes volar {
+    from {
+        opacity: 0;
+        transform: translate(-24px, 24px) scale(0.2);
+    }
+}
+
+/* Respeta a quienes desactivan las animaciones en su dispositivo */
+@media (prefers-reduced-motion: reduce) {
+
+    .fondo-modal,
+    .modal,
+    .modal * {
+        animation: none !important;
+    }
+}

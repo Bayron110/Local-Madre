@@ -1,0 +1,80 @@
+<div class="fondo-modal" (click)="alHacerClicEnFondo($event)">
+    <div class="modal" [class.ok]="modo() === 'atendido'" role="dialog" aria-modal="true"
+        aria-labelledby="titulo-modal">
+        <button #btnCerrar type="button" class="cerrar" aria-label="Cerrar" (click)="cerrar.emit()">
+            ✕
+        </button>
+
+        @switch (modo()) {
+        @case ('atendido') {
+        <div class="anim-ok" aria-hidden="true">
+            <svg class="check" viewBox="0 0 52 52">
+                <circle class="check-circulo" cx="26" cy="26" r="24" fill="none" />
+                <path class="check-marca" fill="none" d="M14 27l8 8 16-17" />
+            </svg>
+            <span class="sobre">📧</span>
+        </div>
+
+        <h2 id="titulo-modal">¡Tu factura fue enviada!</h2>
+
+        <p class="texto">
+            La factura ha sido enviada al correo
+            <strong class="correo">{{ correo() || 'registrado en tu cuenta' }}</strong>.
+            Revisa tu bandeja de entrada o tu carpeta de spam (correo no deseado).
+        </p>
+
+        @if (enlaceSeguro()) {
+        <div class="ayuda">
+            <p>¿No te llegó? Visita el siguiente enlace:</p>
+            <a class="btn-enlace" [href]="enlaceSeguro()" target="_blank" rel="noopener noreferrer">
+                Abrir enlace de mi factura
+            </a>
+        </div>
+        } @else {
+        <div class="ayuda">
+            <p>¿No te llegó? Comunícate con nosotros y te ayudaremos.</p>
+        </div>
+        }
+        }
+
+        @case ('pendiente') {
+        <div class="anim-proceso" aria-hidden="true">
+            <span class="anillo"></span>
+            <span class="anillo anillo-2"></span>
+            <span class="orbita"><span class="punto"></span></span>
+            <div class="hoja">
+                <span class="linea l1"></span>
+                <span class="linea l2"></span>
+                <span class="linea l3"></span>
+                <span class="linea l4"></span>
+            </div>
+        </div>
+
+        <h2 id="titulo-modal">Tu factura está en proceso</h2>
+
+        <p class="texto">
+            Estamos preparando tu factura. Cuando esté lista, el estado de tu solicitud cambiará a
+            <strong>Atendido</strong> y aquí verás a qué correo fue enviada.
+        </p>
+
+        <p class="procesando">Procesando<span>.</span><span>.</span><span>.</span></p>
+        <p class="nota">Esta ventana se actualiza sola, no necesitas recargar.</p>
+        }
+
+        @default {
+        <div class="icono-info" aria-hidden="true">ℹ️</div>
+
+        <h2 id="titulo-modal">Estado de tu solicitud</h2>
+
+        <p class="texto">
+            Tu solicitud tiene el estado <strong>{{ estado() }}</strong>. Si tienes dudas,
+            comunícate con nosotros.
+        </p>
+        }
+        }
+
+        <p class="referencia">Solicitud N° {{ solicitudId() }}</p>
+
+        <button type="button" class="btn-entendido" (click)="cerrar.emit()">Entendido</button>
+    </div>
+</div>

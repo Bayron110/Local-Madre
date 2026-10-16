@@ -1,0 +1,713 @@
+:host {
+    --rojo: #9b1c1c;
+    --rojo-oscuro: #7a1212;
+    --dorado: #e9a23b;
+    --marron: #3e2723;
+    --crema: #fff6e9;
+    --crema-2: #fbefdc;
+    --crema-rgb: 255, 246, 233;
+    --crema-2-rgb: 251, 239, 220;
+    --borde: #e6d3bd;
+    --error: #c62828;
+
+    /* Transparencia del panel en móvil: 1 = opaco, 0 = invisible */
+    --opacidad-movil: 0.65;
+
+    display: block;
+    height: 100vh;
+    height: 100dvh;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--marron);
+}
+
+/* ========== Fondo fijo: nunca se mueve ========== */
+.fondo {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 72px 16px 24px;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background:
+        linear-gradient(rgba(62, 39, 35, 0.15), rgba(62, 39, 35, 0.15)),
+        url('https://i.postimg.cc/3JqdQ3Yp/Gemini-Generated-Image-jeqdthjeqdthjeqd.jpg') center / cover no-repeat,
+        linear-gradient(135deg, var(--crema) 0%, #f6dcc0 100%);
+}
+
+/* ========== Acciones (fuera del panel) ========== */
+.acciones {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255, 246, 233, 0.92);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.enlace,
+.btn-salir {
+    padding: 2px 0;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--marron);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.enlace {
+    border-bottom-color: var(--dorado);
+}
+
+.enlace:hover,
+.btn-salir:hover {
+    color: var(--rojo);
+    border-bottom-color: var(--rojo);
+}
+
+/* ========== Panel tipo kiosco: alto fijo, scroll interno ========== */
+.panel {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 10px solid #1d1d1f;
+    border-radius: 20px;
+    background: var(--crema-2);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Cabecera fija dentro del panel */
+.barra {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--crema);
+    border-bottom: 1px solid var(--borde);
+}
+
+.titulo {
+    margin: 0;
+    color: var(--rojo-oscuro);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.icono-barra {
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+/* Solo esto se desplaza */
+.contenido {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: var(--crema-2);
+}
+
+.contenido::-webkit-scrollbar {
+    width: 8px;
+}
+
+.contenido::-webkit-scrollbar-thumb {
+    background: rgba(155, 28, 28, 0.35);
+    border-radius: 8px;
+}
+
+.tarjeta,
+.solicitud {
+    flex-shrink: 0;
+    padding: 18px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(62, 39, 35, 0.1);
+}
+
+.solicitud {
+    background: transparent;
+    padding: 0 2px;
+    box-shadow: none;
+}
+
+.tarjeta h2,
+.solicitud h2 {
+    margin: 0 0 14px;
+    color: var(--rojo-oscuro);
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.solicitud h2 {
+    text-transform: none;
+    font-size: 1.2rem;
+}
+
+.info {
+    margin: 0;
+    opacity: 0.75;
+}
+
+/* ========== Datos del cliente ========== */
+.datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 18px;
+    margin: 0;
+}
+
+.datos .ancho {
+    grid-column: 1 / -1;
+}
+
+.datos dt {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--rojo-oscuro);
+}
+
+.datos dd {
+    margin: 2px 0 0;
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+/* ========== Opciones ========== */
+.opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.opcion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 118px;
+    padding: 22px 10px 14px;
+    border-radius: 12px;
+    background: #e3e0dd;
+    color: #756c66;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.opcion:hover {
+    transform: translateY(-2px);
+}
+
+.opcion input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opcion:focus-within {
+    box-shadow: 0 0 0 3px rgba(233, 162, 59, 0.55);
+}
+
+.marca {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    border: 2px solid #b9b2ac;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: transparent;
+}
+
+.opcion-icono {
+    font-size: 2.3rem;
+    line-height: 1;
+    filter: grayscale(0.7);
+    transition: filter 0.2s;
+}
+
+.opcion-texto {
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.opcion.activa {
+    background: var(--rojo-oscuro);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(122, 18, 18, 0.35);
+}
+
+.opcion.activa .marca {
+    border-color: #fff;
+    background: transparent;
+    color: #fff;
+}
+
+.opcion.activa .marca::after {
+    content: '✓';
+}
+
+.opcion.activa .opcion-icono {
+    filter: none;
+}
+
+/* ========== Productos ========== */
+.productos {
+    margin-bottom: 18px;
+}
+
+.fila-cabecera,
+.fila-producto {
+    display: grid;
+    grid-template-columns: 40px 52px 1fr 112px 38px;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.fila-cabecera {
+    margin-bottom: 8px;
+    padding-right: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--marron);
+}
+
+.fila-cabecera span:first-child {
+    text-align: center;
+}
+
+.cab-producto {
+    color: var(--rojo-oscuro);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.fila-producto {
+    margin-bottom: 10px;
+    padding-right: 10px;
+    overflow: hidden;
+    border: 2px solid var(--borde);
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.fila-producto:focus-within {
+    border-color: var(--rojo);
+    box-shadow: 0 4px 12px rgba(155, 28, 28, 0.18);
+}
+
+.numero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    background: #f3e6d6;
+    color: var(--marron);
+    font-weight: 800;
+    transition: background 0.2s, color 0.2s;
+}
+
+.fila-producto:focus-within .numero {
+    background: var(--rojo);
+    color: #fff;
+}
+
+.miniatura {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin: 6px 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #fbe4d0, #f3c9a6);
+    font-size: 1.6rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-producto,
+.campo-cantidad {
+    padding: 6px 0;
+}
+
+.campo.total {
+    margin-bottom: 16px;
+}
+
+label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+input[type='text'],
+input[type='number'] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    border: 2px solid var(--borde);
+    border-radius: 10px;
+    background: var(--crema);
+    color: var(--marron);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type='text']:focus,
+input[type='number']:focus {
+    border-color: var(--dorado);
+    box-shadow: 0 0 0 3px rgba(233, 162, 59, 0.3);
+}
+
+input.ng-invalid.ng-touched {
+    border-color: var(--error);
+}
+
+/* Campos dentro de la fila: más limpios */
+.campo-producto input {
+    padding: 9px 10px;
+    border-color: transparent;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.campo-producto input:focus {
+    border-color: var(--dorado);
+    background: var(--crema);
+}
+
+.campo-producto input.ng-invalid.ng-touched {
+    border-color: var(--error);
+}
+
+/* Cantidad en píldora con (lb) */
+.cantidad {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--borde);
+    border-radius: 10px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cantidad:focus-within {
+    border-color: var(--dorado);
+    box-shadow: 0 0 0 3px rgba(233, 162, 59, 0.3);
+}
+
+.cantidad:has(input.ng-invalid.ng-touched) {
+    border-color: var(--error);
+}
+
+.cantidad input,
+.cantidad input:focus,
+.cantidad input.ng-invalid.ng-touched {
+    min-width: 0;
+    padding: 8px 4px 8px 10px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: right;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.cantidad input::-webkit-outer-spin-button,
+.cantidad input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.unidad {
+    padding-right: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #7a6a60;
+}
+
+.error {
+    margin-top: 4px;
+    color: var(--error);
+    font-size: 0.75rem;
+}
+
+/* Quitar / agregar */
+.btn-quitar {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: #f3dcdc;
+    color: var(--rojo);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-quitar:hover:not(:disabled) {
+    background: #eac2c2;
+}
+
+.btn-quitar:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-agregar {
+    width: 100%;
+    margin-top: 4px;
+    padding: 11px 14px;
+    border: 2px dashed var(--dorado);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--marron);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-agregar:hover {
+    background: #fff3df;
+}
+
+/* ========== Alertas ========== */
+.alerta {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.alerta-error {
+    background: #fdeaea;
+    color: var(--error);
+    border: 1px solid #f3b8b8;
+}
+
+.alerta-exito {
+    background: #eaf6ea;
+    color: #2e7d32;
+    border: 1px solid #b6dcb8;
+}
+
+.enlace-exito {
+    margin-left: 8px;
+    color: #2e7d32;
+    text-decoration: underline;
+}
+
+/* ========== Botón principal ========== */
+.btn-solicitar {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: var(--rojo);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(155, 28, 28, 0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-solicitar:hover:not(:disabled) {
+    background: var(--rojo-oscuro);
+}
+
+.btn-solicitar:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-solicitar:disabled {
+    background: #b98a8a;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* ========== Responsive ========== */
+
+/* Pantallas anchas: los botones no tocan el panel, así que lo subimos */
+@media (min-width: 1240px) {
+    .fondo {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .acciones {
+        top: 14px;
+    }
+}
+
+/* ===== Móvil: fondo nuevo + panel semitransparente ===== */
+@media (max-width: 640px) {
+    .fondo {
+        padding: 0;
+        /* Sin velo oscuro: la imagen se ve tal cual */
+        background:
+            url('https://i.postimg.cc/Hk4D4tZk/Gemini-Generated-Image-rbtuy3rbtuy3rbtu.jpg') center / cover no-repeat,
+            linear-gradient(135deg, var(--crema) 0%, #f6dcc0 100%);
+    }
+
+    /* Acciones como franja superior fija */
+    .acciones {
+        position: static;
+        flex: 0 0 auto;
+        justify-content: flex-end;
+        gap: 16px;
+        padding: 10px 14px;
+        border-radius: 0;
+        box-shadow: none;
+        background: rgba(var(--crema-rgb), 0.85);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+    }
+
+    /* Panel a pantalla completa, sin marco y translúcido */
+    .panel {
+        max-width: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: rgba(var(--crema-2-rgb), var(--opacidad-movil));
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+    }
+
+    .barra {
+        background: rgba(var(--crema-rgb), 0.88);
+    }
+
+    /* El contenido deja pasar el fondo del panel */
+    .contenido {
+        padding: 12px;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+        background: transparent;
+    }
+
+    /* Tarjetas y filas casi opacas para mantener la lectura */
+    .tarjeta,
+    .fila-producto {
+        background: rgba(255, 255, 255, 0.92);
+    }
+
+    .opcion:not(.activa) {
+        background: rgba(227, 224, 221, 0.9);
+    }
+
+    .titulo {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .datos {
+        grid-template-columns: 1fr;
+    }
+
+    .opcion {
+        min-height: 108px;
+    }
+
+    .opcion-texto {
+        font-size: 0.78rem;
+    }
+
+    .fila-cabecera {
+        display: none;
+    }
+
+    /* Fila en 2 renglones: producto arriba, cantidad abajo */
+    .fila-producto {
+        grid-template-columns: 34px 48px 1fr 36px;
+        grid-template-areas:
+            'num mini prod quitar'
+            'num mini cant quitar';
+        row-gap: 0;
+        padding-right: 8px;
+    }
+
+    .fila-producto .numero {
+        grid-area: num;
+    }
+
+    .fila-producto .miniatura {
+        grid-area: mini;
+        width: 48px;
+        height: 48px;
+        align-self: center;
+    }
+
+    .fila-producto .campo-producto {
+        grid-area: prod;
+        padding-bottom: 2px;
+    }
+
+    .fila-producto .campo-cantidad {
+        grid-area: cant;
+        padding-top: 2px;
+        max-width: 140px;
+    }
+
+    .fila-producto .btn-quitar {
+        grid-area: quitar;
+        align-self: center;
+    }
+}
